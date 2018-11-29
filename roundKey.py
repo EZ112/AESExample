@@ -108,6 +108,6 @@ def generateRK(key):
     
     temp = sum(w, []) #mengubah list 2d menjadi 1d, tujuannya agar bisa dibagi menjadi 11 roundkey
 
-    rk = [temp[i:i+16] for i in range(0, len(temp), 16)]
+    rk = [temp[i:i+16] for i in range(0, len(temp), 16)] #misahin jadi isinya 16
 
     return rk
