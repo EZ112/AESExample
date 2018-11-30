@@ -48,16 +48,28 @@ def xorList(A, B):
         aL.append(temp)
     return aL
 
-#dipakai dalam roundKey
-
-#geser 1 ke kiri
-def leftShift1(w):
+#geser ke kiri di dalam list
+def leftShift(w, val):
     a = []
 
     for i in range(4):
-        a.append(w[(i+1)%4])
+        a.append(w[(i+val)%4])
 
     return a
+
+#geser shift row
+#shift row state matrix sebanyak 0,1,2,3
+def shiftRow(s):
+    #idenya dipecah jadi 4 dlu
+    temp = [s[i:i+4] for i in range(0, len(s), 4)]
+    
+    #digeser masing-masing per barisnya
+    for i in range(1,len(temp)):
+        temp[i] = leftShift(temp[i],i)
+
+    #lalu digabungkan kembali menjadi satu list
+    temp = sum(temp, [])
+    print(temp)
 
 
 #men-generate matrix dari key yang ada (dlm encrypt dan decrypt)

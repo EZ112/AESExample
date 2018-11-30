@@ -37,7 +37,7 @@ def generateRK(key):
     for idx in range(10):
         idxW = idx*4
 
-        x = at.leftShift1(w[idxW+3]) #simpen hasil circular shift
+        x = at.leftShift(w[idxW+3],1) #simpen hasil circular shift sebanyak 1 gesernya
 
         s = at.sub(x) #simpen hasil substitution
 

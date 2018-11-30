@@ -5,6 +5,7 @@ def encrypt(ptext, rk):
     s = at.generateMatrix(s)
     tRK = at.generateMatrix(rk[0])
 
-    s = at.xorList(s, tRK)
-    
-    print(s)
+    s = at.xorList(s, tRK) #xor kedua matrix
+    s = at.sub(s) #menggunakan s-box pada state matrix awal
+    at.shiftRow(s)
+    #print(s)
