@@ -95,15 +95,17 @@ def trans(s):
 
     return result
 
+#perkalian dua komponen (komponen baris dan komponen kolom)
 def multi2(left, right):
     tempL = int(left, 16)
     tempR = int(right, 16)
-    tempR = tempR << (tempL-1)
+    tempR = tempR << (tempL-1) #geser 1 karena perkalian x dengan polinom
     tempR = hex(tempR)
     tempR = tempR[2:]
     tempR = tempR.upper()
     return tempR
 
+#hasil perkalian baris dan kolom
 def multiplied(left, right):
     a = []
 
@@ -111,13 +113,13 @@ def multiplied(left, right):
         if left[i] == "02":
             temp = multi2(left[i], right[i])
             if len(temp) > 2:
-                temp = xor(temp, "11B")
+                temp = xor(temp, "11B") #modulo dari GF(2^8)
             a.append(temp)
-        elif left[i] == "03":
+        elif left[i] == "03": #karena 03 itu terdiri dari 10 XOR 01
             temp = multi2("02", right[i])
             temp = xor(temp, right[i])
             if len(temp) > 2:
-                temp = xor(temp,"11B")
+                temp = xor(temp,"11B") #modulo dari GF(2^8)
             a.append(temp)
         else:
             a.append(right[i])
