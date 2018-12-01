@@ -18,7 +18,7 @@ def encrypt(ptext, rk):
         s = at.trans(rnd[j-1])
         s = [s[i:i+2] for i in range(0, len(s), 2)] #dipecah jadi komponen yang berisi 2
         
-        s = at.sub(s)
+        s = at.sub(s, at.sbox)
         s = at.shiftRow(s)
         if j != 10: #di terakhir ga lakuin mix column
             s = at.mix(s)

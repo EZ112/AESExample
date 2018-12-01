@@ -39,7 +39,7 @@ def generateRK(key):
 
         x = at.leftShift(w[idxW+3],1) #simpen hasil circular shift sebanyak 1 gesernya
 
-        s = at.sub(x) #simpen hasil substitution
+        s = at.sub(x, at.sbox) #simpen hasil substitution
 
         rcon = generateRCon() #round constant
         g = at.xorList(s, rcon[idx]) #hasil xor rcon dengan w[3]
