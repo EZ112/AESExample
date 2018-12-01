@@ -21,7 +21,7 @@ def encrypt(ptext, rk):
         s = at.sub(s, at.sbox)
         s = at.shiftRow(s)
         if j != 10: #di terakhir ga lakuin mix column
-            s = at.mix(s)
+            s = at.mix(s, at.weightMC)
         s = at.xorList(s, at.generateMatrix(rk[j]))
         
         #hasil round key adalah transpose dari matrix yang ada

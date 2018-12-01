@@ -92,12 +92,19 @@ def shiftRow(s):
     return temp
 
 #untuk mix column
-weight = [
-        ["02", "03", "01", "01"],
-        ["01", "02", "03", "01"],
-        ["01", "01", "02", "03"],
-        ["03", "01", "01", "02"]    
-        ]
+weightMC = [
+    ["02", "03", "01", "01"],
+    ["01", "02", "03", "01"],
+    ["01", "01", "02", "03"],
+    ["03", "01", "01", "02"]
+]
+
+weightInvMC = [
+    ["14", "11", "13", "09"],
+    ["09", "14", "11", "13"],
+    ["13", "09", "14", "11"],
+    ["11", "13", "09", "14"]
+]
 
 def trans(s):
     result = ""
@@ -115,8 +122,8 @@ def trans(s):
 
     return result
 
-#perkalian dua komponen (komponen baris dan komponen kolom)
-def multi2(left, right):
+#perkalian dua dengan komponen kolom
+def multiplier(left, right): 
     tempL = int(left, 16)
     tempR = int(right, 16)
     tempR = tempR << (tempL-1) #geser 1 karena perkalian x dengan polinom
@@ -126,23 +133,40 @@ def multi2(left, right):
     return tempR
 
 #hasil perkalian baris dan kolom
-def multiplied(left, right):
+def multiResult(left, right):
     a = []
 
     for i in range(4):
+        #untuk mix column
         if left[i] == "02":
-            temp = multi2(left[i], right[i])
+            temp = multiplier("02", right[i]) #polinom yg ada dikali sama x
             if len(temp) > 2:
                 temp = xor(temp, "11B") #modulo dari GF(2^8)
             a.append(temp)
+
         elif left[i] == "03": #karena 03 itu terdiri dari 10 XOR 01
-            temp = multi2("02", right[i])
+            #polinom yg ada dikali sama x+1
+            temp = multiplier("02", right[i])
             temp = xor(temp, right[i])
             if len(temp) > 2:
                 temp = xor(temp,"11B") #modulo dari GF(2^8)
             a.append(temp)
-        else:
+
+        elif left[i] == "01": #karena 01 itu cuma 1, jadi tetep polinomnya
+            #polinom yg ada dikali sama 1
             a.append(right[i])
+        
+        #untuk inverse mix column
+        '''
+        elif left[i] == "09": #karena 09 itu terdiri dari 1000 XOR 0001
+            temp = multi2("02", right[i])
+            temp = multi2("02", temp)
+            temp = multi2("02", temp)
+            temp = xor(temp, right[i])
+            if len(temp) > 2:
+                temp = xor(temp,"11B") #modulo dari GF(2^8)
+            a.append(temp)
+        '''
     
     result = a[0]
     for i in range(1,len(a)):
@@ -152,7 +176,7 @@ def multiplied(left, right):
 
 
 #mix column
-def mix(s):
+def mix(s, weight):
     result = []
 
     s = trans(s)
@@ -162,7 +186,7 @@ def mix(s):
     
     for i in range(4):
         for j in range(4):
-            result.append(multiplied(weight[i],temp[j]))
+            result.append(multiResult(weight[i],temp[j]))
     
     return result
 
