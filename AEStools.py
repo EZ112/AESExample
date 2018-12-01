@@ -69,8 +69,80 @@ def shiftRow(s):
 
     #lalu digabungkan kembali menjadi satu list
     temp = sum(temp, [])
-    print(temp)
+    return temp
 
+#untuk mix column
+weight = [
+        ["02", "03", "01", "01"],
+        ["01", "02", "03", "01"],
+        ["01", "01", "02", "03"],
+        ["03", "01", "01", "02"]    
+        ]
+
+def trans(s):
+    result = ""
+    temp = np.zeros(len(s), dtype=int)
+
+    for i in range(len(s)):
+        temp[i] = i
+    
+    temp = temp.reshape((4,4))
+    temp = np.transpose(temp)
+    temp = temp.reshape(len(s))
+
+    for i in range(len(s)):
+        result += s[temp[i]]
+
+    return result
+
+def multi2(left, right):
+    tempL = int(left, 16)
+    tempR = int(right, 16)
+    tempR = tempR << (tempL-1)
+    tempR = hex(tempR)
+    tempR = tempR[2:]
+    tempR = tempR.upper()
+    return tempR
+
+def multiplied(left, right):
+    a = []
+
+    for i in range(4):
+        if left[i] == "02":
+            temp = multi2(left[i], right[i])
+            if len(temp) > 2:
+                temp = xor(temp, "11B")
+            a.append(temp)
+        elif left[i] == "03":
+            temp = multi2("02", right[i])
+            temp = xor(temp, right[i])
+            if len(temp) > 2:
+                temp = xor(temp,"11B")
+            a.append(temp)
+        else:
+            a.append(right[i])
+    
+    result = a[0]
+    for i in range(1,len(a)):
+        result = xor(result,a[i])
+
+    return result
+
+
+#mix column
+def mix(s):
+    result = []
+
+    s = trans(s)
+    temp = [s[i:i+8] for i in range(0,len(s),8)]
+    for i in range(len(temp)):
+        temp[i] = [temp[i][j:j+2] for j in range(0,len(temp[i]),2)]
+    
+    for i in range(4):
+        for j in range(4):
+            result.append(multiplied(weight[i],temp[j]))
+    
+    return result
 
 #men-generate matrix dari key yang ada (dlm encrypt dan decrypt)
 def generateMatrix(text):
