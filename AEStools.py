@@ -77,6 +77,15 @@ def leftShift(w, val):
 
     return a
 
+def rightShift(w, val):
+    a = []
+    n = len(w)
+
+    for i in range(4):
+        a.append(w[n-val-i])
+
+    return a
+
 #geser shift row
 #shift row state matrix sebanyak 0,1,2,3
 def shiftRow(s):
