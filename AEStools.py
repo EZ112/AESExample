@@ -123,50 +123,41 @@ def trans(s):
     return result
 
 #perkalian dua dengan komponen kolom
-def multiplier(left, right): 
-    tempL = int(left, 16)
+def multiplier(left, right):
+    idx = []
+
+    tempL = bin(int(left, 16))
+    tempL = tempL[2:]
     tempR = int(right, 16)
-    tempR = tempR << (tempL-1) #geser 1 karena perkalian x dengan polinom
-    tempR = hex(tempR)
-    tempR = tempR[2:]
-    tempR = tempR.upper()
-    return tempR
+
+    #mencari derajat polinom pada komponen weight
+    #contoh: 09 = 1001 = x^3 + 1
+    for i in range(len(tempL)):
+        if tempL[i] == "1":
+            idx.append(len(tempL)-1-i) #derajat polinom
+    
+    result = 0
+
+    for i in idx:
+        result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
+    
+    result = hex(result)
+    result = result[2:]
+    result = result.upper()
+
+    #dimodulo dengan polinom irreducible di GF(2^8) jika hasil kali > derajat 3
+    if len(result) > 2:
+        result = xor(result, "11B") 
+    return result
 
 #hasil perkalian baris dan kolom
 def multiResult(left, right):
+    #yg kiri itu weight matrix di mix column
     a = []
 
     for i in range(4):
         #untuk mix column
-        if left[i] == "02":
-            temp = multiplier("02", right[i]) #polinom yg ada dikali sama x
-            if len(temp) > 2:
-                temp = xor(temp, "11B") #modulo dari GF(2^8)
-            a.append(temp)
-
-        elif left[i] == "03": #karena 03 itu terdiri dari 10 XOR 01
-            #polinom yg ada dikali sama x+1
-            temp = multiplier("02", right[i])
-            temp = xor(temp, right[i])
-            if len(temp) > 2:
-                temp = xor(temp,"11B") #modulo dari GF(2^8)
-            a.append(temp)
-
-        elif left[i] == "01": #karena 01 itu cuma 1, jadi tetep polinomnya
-            #polinom yg ada dikali sama 1
-            a.append(right[i])
-        
-        #untuk inverse mix column
-        '''
-        elif left[i] == "09": #karena 09 itu terdiri dari 1000 XOR 0001
-            temp = multi2("02", right[i])
-            temp = multi2("02", temp)
-            temp = multi2("02", temp)
-            temp = xor(temp, right[i])
-            if len(temp) > 2:
-                temp = xor(temp,"11B") #modulo dari GF(2^8)
-            a.append(temp)
-        '''
+        a.append(multiplier(left[i], right[i]))
     
     result = a[0]
     for i in range(1,len(a)):
