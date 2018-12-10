@@ -30,5 +30,4 @@ def encrypt(ptext, rk):
 
         rnd.append(s) #hasil round key ke n di mana n >= 1
 
-    
     return "".join(rnd[10])

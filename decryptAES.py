@@ -4,12 +4,20 @@ def decrypt(ctext, rk):
     rnd = []
 
     s = at.strToList(ctext, 2)
-    tRK = rk[10]
+    rnd.append(s)
 
-    s = at.xorList(s,tRK)
-    s = at.invShiftRow(s)
-    s = at.sub(s, at.invSbox)
-    print(s)
+    s = at.generateMatrix(s)
+    #after roundkey    
+    s = at.xorList(s,at.generateMatrix(rk[10]))
     
+    for i in range(9,-1,-1):
+        s = at.shiftRow(s,"right")
+        s = at.sub(s,at.invSbox)
+        #rnd.append(at.generateMatrix(s))
+        
+        s = at.xorList(s,at.generateMatrix(rk[i]))
+        rnd.append(at.generateMatrix(s))
+        if i!=0:
+            s = at.mix(s,at.weightInvMC)
 
-    return s
+    return "".join(rnd[10])

@@ -103,13 +103,6 @@ def shiftRow(s, direction):
     temp = sum(temp, [])
     return temp
 
-def invShiftRow(s):
-    s = generateMatrix(s)
-    s = shiftRow(s, "right")
-    s = generateMatrix(s)
-
-    return s
-
 #untuk mix column
 weightMC = [
     ["02", "03", "01", "01"],
@@ -119,10 +112,10 @@ weightMC = [
 ]
 
 weightInvMC = [
-    ["14", "11", "13", "09"],
-    ["09", "14", "11", "13"],
-    ["13", "09", "14", "11"],
-    ["11", "13", "09", "14"]
+    ["0E", "0B", "0D", "09"],
+    ["09", "0E", "0B", "0D"],
+    ["0D", "09", "0E", "0B"],
+    ["0B", "0D", "09", "0E"]
 ]
 
 def trans(s):
@@ -141,7 +134,89 @@ def trans(s):
 
     return result
 
-#perkalian dua dengan komponen kolom
+
+#xor biner secara manual
+#karena xor int tidak menghasilkan hasil yang diharapkan
+#karena beda length biner nya
+def xorBin(left, right):
+    lenL = len(left)
+    lenR = len(right)
+
+    if lenL<lenR:
+        bound = lenR-lenL
+        length = lenR
+
+        left = int(left,2)
+        left = left << bound
+        left = bin(left)
+        left = left[2:]
+    else:
+        bound = lenL-lenR
+        length = lenL
+
+        right = int(right,2)
+        right = right << bound
+        right = bin(right)
+        right = right[2:]
+    
+    result = ""
+
+    for i in range(length):
+        if left[i] == right[i]:
+            result += "0"
+        else:
+            result += "1"
+
+    result = result[:lenL]
+
+    return result
+    
+#modulo polinomial berdasarkan
+# https://stackoverflow.com/questions/13202758/multiplying-two-polynomials
+def modulo(left, modulus):
+    left = bin(int(left,16))
+    left = left[2:]
+
+    modulus = bin(int(modulus,16))
+    modulus = modulus[2:]
+
+    idxLeft = [] #derajat polinom yang kiri apa saja
+    idxRight = []
+
+    mod = []
+    for i in range(len(left)):
+        if left[i] == "1":
+            idxLeft.append(len(left)-1-i)
+    
+    for i in range(len(modulus)):
+        if modulus[i] == "1":
+            idxRight.append(len(modulus)-1-i)
+    
+    
+    for i in idxLeft:
+        if i < idxRight[0]:
+            mod.append(bin(2**i))
+        elif i == idxRight[0]:
+            mod.append(bin(int(modulus,2) ^ 2**i))
+        else:
+            a = bin(int(modulus,2) << i-idxRight[0])
+            b = bin(2**i << i-idxRight[0])
+
+            a = a[2:]
+            b = b[2:]
+            mod.append(xorBin(a,b))
+            
+    result = 0
+    for elemen in mod:
+        result = result ^ int(elemen,2)
+    
+    result = hex(result)
+    result = result[2:]
+    result = result.zfill(2)
+    result = result.upper()
+
+    return result
+
 def multiplier(left, right):
     idx = []
 
@@ -163,11 +238,12 @@ def multiplier(left, right):
     result = hex(result)
     result = result[2:]
     result = result.upper()
-
+    
     #dimodulo dengan polinom irreducible di GF(2^8) jika hasil kali > derajat 3
-    if len(result) > 2:
-        result = xor(result, "11B") 
+    if int(result,16) > int("FF",16):
+        result = modulo(result, "11B")
     return result
+
 
 #hasil perkalian baris dan kolom
 def multiResult(left, right):
@@ -191,6 +267,7 @@ def mix(s, weight):
 
     s = trans(s)
     temp = strToList(s,8)
+
     for i in range(len(temp)):
         temp[i] = strToList(temp[i],2)
     
