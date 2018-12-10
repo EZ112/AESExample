@@ -269,7 +269,8 @@ def multiResult(left, right):
 
     for i in range(4):
         #untuk mix column
-        a.append(galoisMult(left[i], right[i]))
+        a.append(multiplier(left[i], right[i]))
+        # a.append(galoisMult(left[i], right[i]))
     
     result = a[0]
     for i in range(1,len(a)):
