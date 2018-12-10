@@ -103,6 +103,13 @@ def shiftRow(s, direction):
     temp = sum(temp, [])
     return temp
 
+def shiftColumn(s, direction):
+    s = generateMatrix(s)
+    s = shiftRow(s, direction)
+    s = generateMatrix(s)
+    return s
+
+
 #untuk mix column
 weightMC = [
     ["02", "03", "01", "01"],
@@ -124,7 +131,8 @@ def trans(s):
 
     for i in range(len(s)):
         temp[i] = i
-    
+
+    # print(temp)
     temp = temp.reshape((4,4))
     temp = np.transpose(temp)
     temp = temp.reshape(len(s))
@@ -138,8 +146,7 @@ def trans(s):
 def multiplier(left, right):
     idx = []
 
-    tempL = bin(int(left, 16))
-    tempL = tempL[2:]
+    tempL = bin(int(left, 16))[2:]
     tempR = int(right, 16)
 
     #mencari derajat polinom pada komponen weight
@@ -153,13 +160,13 @@ def multiplier(left, right):
     for i in idx:
         result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
     
-    result = hex(result)
-    result = result[2:]
-    result = result.upper()
+    result = hex(result)[2:].upper()
 
+    print('result',result)
     #dimodulo dengan polinom irreducible di GF(2^8) jika hasil kali > derajat 3
     if len(result) > 2:
-        result = xor(result, "11B") 
+        result = xor(result, "11B")
+
     return result
 
 #hasil perkalian baris dan kolom
@@ -171,6 +178,7 @@ def multiResult(left, right):
         #untuk mix column
         a.append(multiplier(left[i], right[i]))
     
+    print(a)
     result = a[0]
     for i in range(1,len(a)):
         result = xor(result,a[i])

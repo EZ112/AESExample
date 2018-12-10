@@ -17,5 +17,4 @@ ciphertext = encryption
 #Decryption
 decryption = decryptAES.decrypt(ciphertext, rk)
 
-
 print("Decryption : %s" % decryption)

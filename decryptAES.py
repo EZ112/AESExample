@@ -7,11 +7,11 @@ def decrypt(ctext, rk):
     tRK = rk[10]
 
     s = at.xorList(s,tRK)
-    s = at.generateMatrix(s)
-    s = at.shiftRow(s, "right")
-    s = at.generateMatrix(s)
+    s = at.shiftColumn(s, 'right')
     s = at.sub(s, at.invSbox)
+
+    s = at.xorList(s,rk[9])
+    s = at.mix(s, at.weightInvMC)
     print(s)
-    
 
     return s
