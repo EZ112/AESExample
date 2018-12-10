@@ -7,9 +7,7 @@ def decrypt(ctext, rk):
     tRK = rk[10]
 
     s = at.xorList(s,tRK)
-    s = at.generateMatrix(s)
-    s = at.shiftRow(s, "right")
-    s = at.generateMatrix(s)
+    s = at.invShiftRow(s)
     s = at.sub(s, at.invSbox)
     print(s)
     

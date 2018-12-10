@@ -103,6 +103,13 @@ def shiftRow(s, direction):
     temp = sum(temp, [])
     return temp
 
+def invShiftRow(s):
+    s = generateMatrix(s)
+    s = shiftRow(s, "right")
+    s = generateMatrix(s)
+
+    return s
+
 #untuk mix column
 weightMC = [
     ["02", "03", "01", "01"],
