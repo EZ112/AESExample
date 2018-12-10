@@ -124,7 +124,8 @@ def trans(s):
 
     for i in range(len(s)):
         temp[i] = i
-    
+
+    # print(temp)
     temp = temp.reshape((4,4))
     temp = np.transpose(temp)
     temp = temp.reshape(len(s))
@@ -220,8 +221,7 @@ def modulo(left, modulus):
 def multiplier(left, right):
     idx = []
 
-    tempL = bin(int(left, 16))
-    tempL = tempL[2:]
+    tempL = bin(int(left, 16))[2:]
     tempR = int(right, 16)
 
     #mencari derajat polinom pada komponen weight
