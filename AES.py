@@ -7,12 +7,12 @@ key = "5468617473206D79204B756E67204675"
 
 rk = roundKey.generateRK(key) #round key selesai
 
-print("Plaintext: %s" % plaintext)
+print("Plaintext  : %s" % plaintext)
 
 #Encryption
 encryption = encryptAES.encrypt(plaintext, rk)
 
-print("Encryption: %s " % encryption)
+print("Encryption : %s " % encryption)
 
 ciphertext = encryption
 
