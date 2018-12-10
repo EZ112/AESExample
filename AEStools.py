@@ -238,19 +238,19 @@ def modulo(left, modulus):
 def multiplier(left, right):
     idx = []
 
-#     tempL = bin(int(left, 16))[2:]
-#     tempR = int(right, 16)
+    tempL = bin(int(left, 16))[2:]
+    tempR = int(right, 16)
 
-#     #mencari derajat polinom pada komponen weight
-#     #contoh: 09 = 1001 = x^3 + 1
-#     for i in range(len(tempL)):
-#         if tempL[i] == "1":
-#             idx.append(len(tempL)-1-i) #derajat polinom
+    #mencari derajat polinom pada komponen weight
+    #contoh: 09 = 1001 = x^3 + 1
+    for i in range(len(tempL)):
+        if tempL[i] == "1":
+            idx.append(len(tempL)-1-i) #derajat polinom
     
-#     result = 0
+    result = 0
 
-#     for i in idx:
-#         result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
+    for i in idx:
+        result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
     
     result = hex(result)
     result = result[2:]
