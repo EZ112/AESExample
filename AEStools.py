@@ -124,8 +124,7 @@ def trans(s):
 
     for i in range(len(s)):
         temp[i] = i
-
-    # print(temp)
+        
     temp = temp.reshape((4,4))
     temp = np.transpose(temp)
     temp = temp.reshape(len(s))
@@ -272,9 +271,6 @@ def multiResult(left, right):
         #untuk mix column
         a.append(galoisMult(left[i], right[i]))
     
-    print(left)
-    print(right)
-    
     result = a[0]
     for i in range(1,len(a)):
         result = xor(result,a[i])
@@ -284,8 +280,6 @@ def multiResult(left, right):
 
 #mix column
 def mix(s, weight):
-
-    print(s)
     result = []
 
     s = trans(s)
