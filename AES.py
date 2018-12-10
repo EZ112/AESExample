@@ -10,7 +10,7 @@ rk = roundKey.generateRK(key) #round key selesai
 #Encryption
 encryption = encryptAES.encrypt(plaintext, rk)
 
-print("Encryption: %s " % encryption)
+print("Encryption : %s " % encryption)
 
 ciphertext = encryption
 
