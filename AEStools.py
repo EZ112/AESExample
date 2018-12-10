@@ -82,19 +82,22 @@ def rightShift(w, val):
     n = len(w)
 
     for i in range(4):
-        a.append(w[n-val-i])
+        a.append(w[(n-val+i)%n])
 
     return a
 
 #geser shift row
 #shift row state matrix sebanyak 0,1,2,3
-def shiftRow(s):
+def shiftRow(s, direction):
     #idenya dipecah jadi 4 dlu
-    temp = [s[i:i+4] for i in range(0, len(s), 4)]
+    temp = listDiv(s,4)
     
     #digeser masing-masing per barisnya
     for i in range(1,len(temp)):
-        temp[i] = leftShift(temp[i],i)
+        if direction == "left":
+            temp[i] = leftShift(temp[i],i)
+        elif direction == "right":
+            temp[i] = rightShift(temp[i],i)
 
     #lalu digabungkan kembali menjadi satu list
     temp = sum(temp, [])
@@ -180,9 +183,9 @@ def mix(s, weight):
     result = []
 
     s = trans(s)
-    temp = [s[i:i+8] for i in range(0,len(s),8)]
+    temp = strToList(s,8)
     for i in range(len(temp)):
-        temp[i] = [temp[i][j:j+2] for j in range(0,len(temp[i]),2)]
+        temp[i] = strToList(temp[i],2)
     
     for i in range(4):
         for j in range(4):
@@ -205,3 +208,18 @@ def generateMatrix(text):
         mat.append(text[i])
     
     return mat
+
+#generate string menjadi list berdasarkan len
+def strToList(text, lsLen):
+    temp = ""
+    for i in range(len(text)):
+        if i!=0 and i%lsLen==0:
+            temp=temp+' '+text[i]
+        else:
+            temp+=text[i]
+    return temp.split(' ')
+
+#membagi list menjadi beberapa bagian
+def listDiv(ls, lslen):
+    res = [ls[i:i+lslen] for i in range(0, len(ls), lslen)]
+    return res

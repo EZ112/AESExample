@@ -27,12 +27,11 @@ def generateRCon():
     return out  
 
 def generateRK(key):
-    w = [key[i:i+8] for i in range(0,len(key), 8)] #key dibagi menjadi 4 bagian
+    w = at.strToList(key,8) #key dibagi menjadi 4 bagian
 
     #tiap w[i] dibagi menjadi 4 bagian lagi
     for i in range(len(w)):
-        temp = w[i]
-        w[i] = [temp[j:j+2] for j in range(0,len(w[i]), 2)]
+        w[i] = at.strToList(w[i],2)
     
     for idx in range(10):
         idxW = idx*4

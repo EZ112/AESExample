@@ -3,10 +3,10 @@ import AEStools as at
 def encrypt(ptext, rk):
     rnd = []
 
-    s = [ptext[i:i+2] for i in range(0, len(ptext), 2)]
+    s = at.strToList(ptext, 2)
     s = at.generateMatrix(s)
         
-    tRK = at.generateMatrix(rk[0])
+    tRK = at.generateMatrix(rk[0]) #temp Round Key
 
     s = at.xorList(s, tRK) #xor kedua matrix
     s = at.trans(s) #hasil round key adalah transpose dari matrix yang ada
@@ -19,7 +19,7 @@ def encrypt(ptext, rk):
         s = [s[i:i+2] for i in range(0, len(s), 2)] #dipecah jadi komponen yang berisi 2
         
         s = at.sub(s, at.sbox)
-        s = at.shiftRow(s)
+        s = at.shiftRow(s, "left")
         if j != 10: #di terakhir ga lakuin mix column
             s = at.mix(s, at.weightMC)
         s = at.xorList(s, at.generateMatrix(rk[j]))
