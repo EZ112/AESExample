@@ -119,10 +119,10 @@ weightMC = [
 ]
 
 weightInvMC = [
-    ["14", "11", "13", "09"],
-    ["09", "14", "11", "13"],
-    ["13", "09", "14", "11"],
-    ["11", "13", "09", "14"]
+    ["0E", "0B", "0D", "09"],
+    ["09", "0E", "0B", "0D"],
+    ["0D", "09", "0E", "0B"],
+    ["0B", "0D", "09", "0E"]
 ]
 
 def trans(s):
@@ -143,31 +143,46 @@ def trans(s):
     return result
 
 #perkalian dua dengan komponen kolom
-def multiplier(left, right):
-    idx = []
-
-    tempL = bin(int(left, 16))[2:]
-    tempR = int(right, 16)
-
-    #mencari derajat polinom pada komponen weight
-    #contoh: 09 = 1001 = x^3 + 1
-    for i in range(len(tempL)):
-        if tempL[i] == "1":
-            idx.append(len(tempL)-1-i) #derajat polinom
+def galoisMult(a, b):
+    a = int(a,16)
+    b = int(b, 16)
+    p = 0
+    hiBitSet = 0
+    for i in range(8):
+        if b & 1 == 1:
+            p ^= a
+        hiBitSet = a & 0x80
+        a <<= 1
+        if hiBitSet == 0x80:
+            a ^= 0x11b
+        b >>= 1
+    return hex(p % 256)[2:].upper().zfill(2)
     
-    result = 0
+# def multiplier(left, right):
+#     idx = []
 
-    for i in idx:
-        result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
+#     tempL = bin(int(left, 16))[2:]
+#     tempR = int(right, 16)
+
+#     #mencari derajat polinom pada komponen weight
+#     #contoh: 09 = 1001 = x^3 + 1
+#     for i in range(len(tempL)):
+#         if tempL[i] == "1":
+#             idx.append(len(tempL)-1-i) #derajat polinom
     
-    result = hex(result)[2:].upper()
+#     result = 0
 
-    print('result',result)
+#     for i in idx:
+#         result = result ^ (tempR << i) #hasil perkalian polinom; sifat distribusi
+    
+#     result = hex(result)[2:].upper()
+
+    # print('result',result)
     #dimodulo dengan polinom irreducible di GF(2^8) jika hasil kali > derajat 3
-    if len(result) > 2:
-        result = xor(result, "11B")
+    # if len(result) > 2:
+    #     result = xor(result, "11B")
 
-    return result
+    # return result
 
 #hasil perkalian baris dan kolom
 def multiResult(left, right):
@@ -176,7 +191,10 @@ def multiResult(left, right):
 
     for i in range(4):
         #untuk mix column
-        a.append(multiplier(left[i], right[i]))
+        a.append(galoisMult(left[i], right[i]))
+    
+    print(left)
+    print(right)
     
     print(a)
     result = a[0]
@@ -188,6 +206,8 @@ def multiResult(left, right):
 
 #mix column
 def mix(s, weight):
+
+    print(s)
     result = []
 
     s = trans(s)
